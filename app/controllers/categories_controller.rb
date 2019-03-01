@@ -10,15 +10,18 @@ class CategoriesController < ApplicationController
   # GET /categories/1
   # GET /categories/1.json
   def show
+     @products = Product.where(category_id: [@category.subtree_ids])
   end
 
   # GET /categories/new
   def new
     @category = Category.new
+    @categories = Category.all.order(:title)
   end
 
   # GET /categories/1/edit
   def edit
+    @categories = Category.where("id != #{@category.id}").order(:title)
   end
 
   # POST /categories
@@ -69,6 +72,6 @@ class CategoriesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def category_params
-      params.require(:category).permit(:title)
+      params.require(:category).permit(:title, :parent_id)
     end
 end
