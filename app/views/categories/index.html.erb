@@ -1,28 +1,14 @@
 
-
 <h1>Categories</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>Parent Category</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @categories.each do |category| %>
-      <tr>
-        <td><%= category.title %></td>
-        <td><%= category.parent.title if category.parent %></td>
-        <td><%= link_to 'Show', category %></td>
-        <td><%= link_to 'Edit', edit_category_path(category) %></td>
-        <td><%= link_to 'Destroy', category, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
+  <ul>
+    <% Category.roots.each do |category| %>
+      <li>
+        <%= link_to category.title, category %>
+        <%= render 'submenu_categories', categories: category.root.descendants.arrange %>
+      </li>
     <% end %>
-  </tbody>
-</table>
+  </ul>
 
 <br>
 

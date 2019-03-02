@@ -5,10 +5,10 @@ class Product < ApplicationRecord
 
   def should_generate_new_friendly_id?
     if !slug?
-      name_changed?
+      title_changed?
     else
       false
     end
   end
-  
+
 end
