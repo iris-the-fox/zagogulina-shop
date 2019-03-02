@@ -4,7 +4,7 @@
   <ul>
     <% Category.roots.each do |category| %>
       <li>
-        <%= link_to category.title, category %>
+        <%= link_to category.title, category %> 
         <%= render 'submenu_categories', categories: category.root.descendants.arrange %>
       </li>
     <% end %>

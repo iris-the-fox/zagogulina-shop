@@ -14,3 +14,9 @@
 //= require activestorage
 //= require turbolinks
 //= require_tree .
+//= require jquery2
+//= require jquery-ui
+
+//=require jquery.mjs.nestedSortable.js
+//=require sortable_tree.js
+

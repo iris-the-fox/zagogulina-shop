@@ -1,10 +1,22 @@
 class CategoriesController < ApplicationController
+   protect_from_forgery with: :null_session
+   
+  include SortableTreeController::Sort
+  sortable_tree 'Category', {parent_method: 'parent', sorting_attribute: 'pos'}
   before_action :set_category, only: [:show, :edit, :update, :destroy]
 
   # GET /categories
   # GET /categories.json
   def index
-    @categories = Category.all
+    @categories = Category.all.arrange(:order => :pos)
+  end
+
+   
+
+  def manage
+   
+    @categories = Category.all.arrange(:order => :pos)
+
   end
 
   # GET /categories/1
@@ -72,6 +84,6 @@ class CategoriesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def category_params
-      params.require(:category).permit(:title, :parent_id, :slug)
+      params.require(:category).permit(:title, :parent_id, :slug, :pos, :ancestry_depth)
     end
 end
