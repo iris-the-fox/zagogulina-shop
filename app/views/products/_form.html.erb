@@ -26,6 +26,11 @@
     <%= form.collection_select :category_id, @categories, :id, :title, { include_blank: true }, class: 'form-control' %>
   </div>
 
+  <div>
+    <%= form.label :slug %>
+    <%= form.text_field :slug %>
+  </div>
+
 
   <div class="actions">
     <%= form.submit %>
