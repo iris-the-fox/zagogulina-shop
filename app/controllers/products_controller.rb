@@ -2,6 +2,7 @@ class ProductsController < ApplicationController
   before_action :authenticate_admin
   skip_before_action :authenticate_admin, only: [:show, :index]
   before_action :set_product, only: [:show, :edit, :update, :destroy]
+  before_action :set_categories , only: [:new, :edit, :update, :create]
 
   # GET /products
   # GET /products.json
@@ -17,12 +18,10 @@ class ProductsController < ApplicationController
   # GET /products/new
   def new
     @product = Product.new
-    @categories = Category.all.order(:title)
   end
 
   # GET /products/1/edit
   def edit
-    @categories = Category.all.order(:title)
   end
 
   # POST /products
@@ -33,10 +32,8 @@ class ProductsController < ApplicationController
     respond_to do |format|
       if @product.save
         format.html { redirect_to @product, notice: 'Product was successfully created.' }
-        format.json { render :show, status: :created, location: @product }
       else
         format.html { render :new }
-        format.json { render json: @product.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -47,10 +44,8 @@ class ProductsController < ApplicationController
     respond_to do |format|
       if @product.update(product_params)
         format.html { redirect_to @product, notice: 'Product was successfully updated.' }
-        format.json { render :show, status: :ok, location: @product }
       else
         format.html { render :edit }
-        format.json { render json: @product.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -71,12 +66,14 @@ class ProductsController < ApplicationController
       @product = Product.friendly.find(params[:id])
     end
 
+    def set_categories
+      @categories = Category.all.order(:title)
+    end
+
     # Never trust parameters from the scary internet, only allow the white list through.
     def product_params
       params.require(:product).permit(:title, :description, :image, :category_id, :slug)
     end
 
-    def authenticate_admin
-      redirect_to root_path, alert: 'Not authorized.' unless current_user.try(:admin?)
-    end
+
 end

@@ -3,7 +3,7 @@ class Category < ApplicationRecord
   friendly_id :title, :use => [:slugged, :history]
   has_many :products, dependent: :nullify
   has_ancestry orphan_strategy: :adopt,  :cache_depth=>true
-  
+  validates_presence_of :title
 
   def should_generate_new_friendly_id?
     if !slug?

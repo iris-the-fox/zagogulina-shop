@@ -2,9 +2,10 @@ class CategoriesController < ApplicationController
   before_action :authenticate_admin
   skip_before_action :authenticate_admin, only: [:show, :index]
   protect_from_forgery with: :null_session
-  
-  
-   
+  before_action :set_category, only: [:show, :edit, :update, :destroy]
+  before_action :set_categories_new, only: [:new, :create]
+  before_action :set_categories_edit, only: [:edit, :update]
+     
   include SortableTreeController::Sort
   sortable_tree 'Category', {parent_method: 'parent', sorting_attribute: 'pos'}
   before_action :set_category, only: [:show, :edit, :update, :destroy]
@@ -28,12 +29,10 @@ class CategoriesController < ApplicationController
   # GET /categories/new
   def new
     @category = Category.new
-    @categories = Category.all.order(:title)
   end
 
   # GET /categories/1/edit
   def edit
-    @categories = Category.where("id != #{@category.id}").order(:title)
   end
 
   # POST /categories
@@ -82,13 +81,19 @@ class CategoriesController < ApplicationController
       @category = Category.friendly.find(params[:id])
     end
 
+    def set_categories_new
+      @categories = Category.all.order(:title)
+    end
+
+    def set_categories_edit
+      set_category
+      @categories = Category.where("id != #{@category.id}").order(:title)
+    end
+
     # Never trust parameters from the scary internet, only allow the white list through.
     def category_params
       params.require(:category).permit(:title, :parent_id, :slug, :pos, :ancestry_depth)
     end
 
-    def authenticate_admin
-      redirect_to root_path, alert: 'Not authorized.' unless current_user.try(:admin?)
-    end
 
 end

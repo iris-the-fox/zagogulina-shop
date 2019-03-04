@@ -1,10 +1,30 @@
 @import "sortable_tree";
 @import "bootstrap";
 
+.row {
+    margin-right: 0px;
+}
+.field {
+    margin-top: 1em;
+}
+
+label {
+    margin-bottom: .2em;
+}
+
+.form-control {
+    max-width: 80%;
+}
+
+.actions {
+    margin-top: 1em;
+}
+
 .col-md-3 {
    background-color: #f2ffe6;
    padding-top: 20px;
 }
+
 ul.myNav{
     list-style-type: none;
     margin: 0;
@@ -47,3 +67,6 @@ li.sideMenu a.active {
     background-color: #ebebe0;
 }
 
+.table {
+    max-width: 80%;
+}

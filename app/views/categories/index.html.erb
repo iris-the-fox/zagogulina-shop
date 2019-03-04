@@ -1,20 +1,17 @@
 
 <h1>Categories</h1>
 <% if  current_user.try(:admin?) %>
-<%= link_to 'New Category', new_category_path %>
+<%= link_to 'New Category', new_category_path %> |
 <%= link_to 'Manage Categories', manage_categories_path %>
 <% end %>
 
-<table>
-  <thead>
+<table class="table table-bordered">
+  <thead class="thead-dark">
     <tr>
       <th>Title</th>
       <th>Parent</th>
       <th>Children</th>
       <th>Number Of Products</th>
-      <% if  current_user.try(:admin?) %>
-      <th colspan="2"></th>
-      <% end %>
     </tr>
   </thead>
 
@@ -33,10 +30,6 @@
           <% end %>
         </td>
         <td><%= category.products.count %></td>
-        <% if  current_user.try(:admin?) %>
-        <td><%= link_to 'Edit', edit_category_path(category) %></td>
-        <td><%= link_to 'Destroy', category, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-        <% end %>
       </tr>
     <% end %>
   </tbody>
