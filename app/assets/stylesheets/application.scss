@@ -1,6 +1,10 @@
 @import "sortable_tree";
+@import "bootstrap";
 
-
+.col-md-3 {
+   background-color: #f2ffe6;
+   padding-top: 20px;
+}
 ul.myNav{
     list-style-type: none;
     margin: 0;
@@ -30,3 +34,16 @@ li.myNav a:hover:not(.active) {
 li.myNav a.active {
     background-color: #4682B4;
 }
+
+ul.sideMenu {
+    list-style-type: none;
+}
+
+li.sideMenu a {
+    padding: 0.5em;
+    }
+li.sideMenu a.active {
+    border-radius: 0.5em;
+    background-color: #ebebe0;
+}
+

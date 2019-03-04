@@ -1,0 +1,10 @@
+<ul class='sideMenu'>
+  <% Category.roots.each do |category| %>
+    <li class='sideMenu'>
+      <%= link_to category.title, category, class: "nav-link #{'active' if current_page?(category_path(category)) || @product.present? && @product.category == category}" %> 
+      <%= render 'layouts/submenu_categories', categories: category.root.descendants.arrange %>
+    </li>
+  <% end %>
+</ul>
+
+

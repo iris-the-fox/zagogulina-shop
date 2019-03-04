@@ -16,6 +16,7 @@
   <strong>Category:</strong>
   <%= link_to @product.category.title, @product.category if @product.category%>
 </p>
-
-<%= link_to 'Edit', edit_product_path(@product) %> |
-<%= link_to 'Back', products_path %>
+<% if current_user.try(:admin?) %>
+  <%= link_to 'Edit', edit_product_path(@product) %> |
+  <%= link_to 'Back', products_path %>
+<% end %>

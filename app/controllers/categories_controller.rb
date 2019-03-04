@@ -1,5 +1,9 @@
 class CategoriesController < ApplicationController
-   protect_from_forgery with: :null_session
+  before_action :authenticate_admin
+  skip_before_action :authenticate_admin, only: [:show, :index]
+  protect_from_forgery with: :null_session
+  
+  
    
   include SortableTreeController::Sort
   sortable_tree 'Category', {parent_method: 'parent', sorting_attribute: 'pos'}
@@ -8,15 +12,11 @@ class CategoriesController < ApplicationController
   # GET /categories
   # GET /categories.json
   def index
-    @categories = Category.all.arrange(:order => :pos)
+    @categories = Category.all
   end
 
-   
-
   def manage
-   
     @categories = Category.all.arrange(:order => :pos)
-
   end
 
   # GET /categories/1
@@ -86,4 +86,9 @@ class CategoriesController < ApplicationController
     def category_params
       params.require(:category).permit(:title, :parent_id, :slug, :pos, :ancestry_depth)
     end
+
+    def authenticate_admin
+      redirect_to root_path, alert: 'Not authorized.' unless current_user.try(:admin?)
+    end
+
 end
