@@ -1,4 +1,5 @@
 class Product < ApplicationRecord
+  mount_uploader :image, ImageUploader
   extend FriendlyId
   belongs_to :category
   friendly_id :title, :use => [:slugged, :history]

@@ -9,6 +9,9 @@
   <%= @product.description %>
 </p>
 
+<%= image_tag @product.image.url(:large) if @product.image? %>
+
+
 <p>
   <strong>Category:</strong>
   <%= link_to @product.category.title, @product.category if @product.category%>
