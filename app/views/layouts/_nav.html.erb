@@ -1,0 +1,11 @@
+<ul class="myNav">
+  <li class="myNav">  <%= active_link_to("Main", root_path, active: :exclusive) %></li>
+  <li class="myNav">  <%= active_link_to("Categories", categories_path) %></li>
+  <li class="myNav">  <%= active_link_to("Products", products_path) %></li>
+    <% if current_user %>
+  <li class="myNav"> <%= link_to("Sign out", destroy_user_session_path, method: :delete) %></li>
+    <% else %>
+  <li class="myNav"><%= link_to("Sign up", new_user_registration_path) %> </li>
+  <li class="myNav"> <%= link_to("Sign in", new_user_session_path) %> </li>
+    <% end %>
+</ul>
