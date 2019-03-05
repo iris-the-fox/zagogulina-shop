@@ -14,4 +14,10 @@ module ControllerMacros
       sign_in user
     end
   end
+
+  def create_category
+    before(:each) do
+      category = FactoryBot.create(:category)
+    end
+  end
 end
