@@ -3,6 +3,9 @@ require_relative '../support/devise'
 
 RSpec.describe CategoriesController, type: :controller do
   login_admin
+  before(:each) do
+    @category = FactoryBot.create(:category)
+  end
 
   it "should have a current_user" do
     # note the fact that you should remove the "validate_session" parameter if this was a scaffold-generated controller
@@ -13,7 +16,7 @@ RSpec.describe CategoriesController, type: :controller do
     # Note, rails 3.x scaffolding may add lines like get :index, {}, valid_session
     # the valid_session overrides the devise login. Remove the valid_session from your specs
     get 'index'
-    expect(response).to be_success
+    expect(response).to be_successful
   end
   # This should return the minimal set of attributes required to create a valid
   # Category. As you add validations to Category, be sure to
@@ -30,7 +33,10 @@ RSpec.describe CategoriesController, type: :controller do
 
   describe "GET #index" do
     it "returns a success response" do
-      Category.create! valid_attributes
+      get :index, params: {}
+      expect(response).to be_successful
+    end
+    it "returns a success response witout login", skip_before: true do
       get :index, params: {}
       expect(response).to be_successful
     end
@@ -38,8 +44,11 @@ RSpec.describe CategoriesController, type: :controller do
 
   describe "GET #show" do
     it "returns a success response" do
-      category = Category.create! valid_attributes
-      get :show, params: {id: category.to_param}
+      get :show, params: {id: @category.to_param}
+      expect(response).to be_successful
+    end
+    it "returns a success response witout login", skip_before: true do
+      get :show, params: {id: @category.to_param}
       expect(response).to be_successful
     end
   end
@@ -49,13 +58,20 @@ RSpec.describe CategoriesController, type: :controller do
       get :new, params: {}
       expect(response).to be_successful
     end
+    it "not returns a success response witout login", skip_before: true do
+      get :new, params: {}
+      expect(response).not_to be_successful
+    end
   end
 
   describe "GET #edit" do
     it "returns a success response" do
-      category = Category.create! valid_attributes
-      get :edit, params: {id: category.to_param}
+       get :edit, params: {id: @category.to_param}
       expect(response).to be_successful
+    end
+    it "not returns a success response witout login", skip_before: true do
+      get :edit, params: {id: @category.to_param}
+      expect(response).not_to be_successful
     end
   end
 
@@ -88,23 +104,21 @@ RSpec.describe CategoriesController, type: :controller do
       }
 
       it "updates the requested category" do
-        category = Category.create! valid_attributes
-        put :update, params: {id: category.to_param, category: new_attributes}
-        category.reload
-        expect(category.attributes).to include(  {"title" => "Somecat2", "slug" => 'another-slug'} )
+        put :update, params: {id: @category.to_param, category: new_attributes}
+        @category.reload
+        expect(@category.attributes).to include(  {"title" => "Somecat2", "slug" => 'another-slug'} )
       end
 
       it "redirects to the category" do
-        category = Category.create! valid_attributes
-        put :update, params: {id: category.to_param, category: valid_attributes}
-        expect(response).to redirect_to(category)
+        put :update, params: {id: @category.to_param, category: new_attributes, slug: new_attributes{:slug}}
+        @category.reload
+        expect(response).to redirect_to(@category)
       end
     end
 
     context "with invalid params" do
       it "returns a success response (i.e. to display the 'edit' template)" do
-        category = Category.create! valid_attributes
-        put :update, params: {id: category.to_param, category: invalid_attributes}
+        put :update, params: {id: @category.to_param, category: invalid_attributes}
         expect(response.body).to include("redirected")
       end
     end
@@ -112,15 +126,13 @@ RSpec.describe CategoriesController, type: :controller do
 
   describe "DELETE #destroy" do
     it "destroys the requested category" do
-      category = Category.create! valid_attributes
       expect {
-        delete :destroy, params: {id: category.to_param}
+        delete :destroy, params: {id: @category.to_param}
       }.to change(Category, :count).by(-1)
     end
 
     it "redirects to the categories list" do
-      category = Category.create! valid_attributes
-      delete :destroy, params: {id: category.to_param}
+      delete :destroy, params: {id: @category.to_param}
       expect(response).to redirect_to(categories_url)
     end
   end
