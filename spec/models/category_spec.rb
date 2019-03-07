@@ -1,13 +1,21 @@
 require 'rails_helper'
-require_relative '../support/devise'
+
 
 RSpec.describe Category, type: :model do
-  it "is valid with valid attributes" do
-    expect(FactoryBot.create(:category)).to be_valid
+
+  describe "Validations" do 
+    it "is valid with valid attributes" do
+      expect(FactoryBot.create(:category)).to be_valid
+    end
+    it "is not valid without a title" do
+    	expect(FactoryBot.build(:category, title: nil)).to_not be_valid
+    end
   end
-  it "is not valid without a title" do
-  	expect(FactoryBot.build(:category, title: nil)).to_not be_valid
+
+  describe "Associations" do
+    it { is_expected.to have_many(:products) }
   end
+
   
   it "creates a slug from title" do
   	expect(FactoryBot.create(:category).slug).to eq("sometitle")
