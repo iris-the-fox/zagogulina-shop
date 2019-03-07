@@ -2,11 +2,14 @@ require 'rails_helper'
 
 RSpec.describe "products/edit", type: :view do
   before(:each) do
-    @product = assign(:product, Product.create!(
+    category = FactoryBot.create(:category)
+  end
+  before(:each) do
+    @product = FactoryBot.create(:product,
       :title => "MyString",
       :description => "MyText",
-      :category => nil
-    ))
+      :category_id => 1
+    )
   end
 
   it "renders the edit product form" do

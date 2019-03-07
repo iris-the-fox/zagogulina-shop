@@ -2,6 +2,7 @@ require 'rails_helper'
 require_relative '../support/devise'
 
 RSpec.describe ProductsController, type: :controller do
+  render_views
   login_admin
   before(:each) do
     category = FactoryBot.create(:category)
@@ -11,19 +12,14 @@ RSpec.describe ProductsController, type: :controller do
   end
 
   it "should have a current_user" do
-    # note the fact that you should remove the "validate_session" parameter if this was a scaffold-generated controller
     expect(subject.current_user).to_not eq(nil)
   end
 
   it "should get index" do
-    # Note, rails 3.x scaffolding may add lines like get :index, {}, valid_session
-    # the valid_session overrides the devise login. Remove the valid_session from your specs
     get 'index'
     expect(response).to be_successful
   end
-  # This should return the minimal set of attributes required to create a valid
-  # Category. As you add validations to Category, be sure to
-  # adjust the attributes here as well.
+ 
   let(:valid_attributes) {
     { title: 'Someprod',
       description: 'some description',
@@ -31,51 +27,68 @@ RSpec.describe ProductsController, type: :controller do
   }
 
   let(:invalid_attributes) {
-    { slug: 'for-empty-product' }
+    { title: nil,
+      slug: 'for-empty-product' }
   }
 
 
   describe "GET #index" do
-    it "returns a success response" do
-      get :index, params: {}
-      expect(response).to be_successful
+    context "when logged in" do
+      it "returns a success response" do
+        get :index, params: {}
+        expect(response).to be_successful
+      end
     end
-    it "returns a success response witout login", skip_before: true do
-      get :index, params: {}
-      expect(response).to be_successful
+    context "when logged out", skip_before: true do
+      it "returns a success response witout login" do
+        get :index, params: {}
+        expect(response).to be_successful
+      end
     end
   end
 
   describe "GET #show" do
-    it "returns a success response" do
-      get :show, params: {id: @product.to_param}
-      expect(response).to be_successful
+    context "when logged in" do
+      it "returns a success response" do
+        get :show, params: {id: @product.to_param}
+        expect(response).to be_successful
+      end
     end
-    it "returns a success response witout login", skip_before: true do
-      get :show, params: {id: @product.to_param}
-      expect(response).to be_successful
+    context "when logged out", skip_before: true do
+      it "returns a success response" do
+        get :show, params: {id: @product.to_param}
+        expect(response).to be_successful
+      end
     end
   end
 
   describe "GET #new" do
-    it "returns a success response" do
-      get :new, params: {}
-      expect(response).to be_successful
+    context "when logged in" do
+      it "returns a success response" do
+        get :new, params: {}
+        expect(response).to be_successful
+      end
     end
-    it "not returns a success response witout login", skip_before: true do
-      get :new, params: {}
-      expect(response).not_to be_successful
+    context "when logged out", skip_before: true do
+      it "not returns a success response" do
+        get :new, params: {}
+        expect(response).not_to be_successful
+      end
     end
   end
 
   describe "GET #edit" do
-    it "returns a success response" do
-      get :edit, params: {id: @product.to_param}
-      expect(response).to be_successful
+    context "when logged in" do
+      it "returns a success response" do
+        get :edit, params: {id: @product.to_param}
+        expect(response).to be_successful
+      end
     end
-    it "not returns a success response witout login", skip_before: true do
-      get :edit, params: {id: @product.to_param}
-      expect(response).not_to be_successful
+    context "when logged out", skip_before: true do
+      it "not returns a success response" do
+        get :edit, params: {id: @product.to_param}
+        expect(response).not_to be_successful
+      end
     end
   end
 
@@ -94,9 +107,14 @@ RSpec.describe ProductsController, type: :controller do
     end
 
     context "with invalid params" do
-      it "returns a success response (i.e. to display the 'new' template)" do
+      it "doesn't create a new Category" do
+        expect {
+          post :create, params: {product: invalid_attributes}
+        }.not_to change(Product, :count)
+      end
+      it "render 'new' template" do
         post :create, params: {product: invalid_attributes}
-        expect(response).to be_successful
+        expect(response).to render_template("new")
       end
     end
   end
@@ -113,7 +131,6 @@ RSpec.describe ProductsController, type: :controller do
         @product.reload
         expect(@product.attributes).to include(  {"title" => "Someprod2", "description" => "some description 2"} )
       end
-
       it "redirects to the product" do
         put :update, params: {id: @product.to_param, product: new_attributes, slug: new_attributes{:slug}}
         @product.reload
@@ -122,10 +139,14 @@ RSpec.describe ProductsController, type: :controller do
     end
 
     context "with invalid params" do
-      it " not returns a success response" do
+      it "not change product attributes" do
         put :update, params: {id: @product.to_param, product: invalid_attributes}
-        expect(response.body).to include("redirected")
+        expect(@product.attributes).not_to include(  {"slug" => "for-empty-product"} )
       end
+      it "render 'edit' template" do
+        put :update, params: {id: @product.to_param, product: invalid_attributes}
+        expect(response).to render_template("edit")
+       end
     end
   end
 

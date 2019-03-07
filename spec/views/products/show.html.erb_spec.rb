@@ -1,12 +1,17 @@
 require 'rails_helper'
+require_relative '../../support/devise'
 
 RSpec.describe "products/show", type: :view do
+  login_admin
   before(:each) do
-    @product = assign(:product, Product.create!(
-      :title => "Title",
+    category = FactoryBot.create(:category)
+  end
+  before(:each) do
+    @product = FactoryBot.create(:product,
+      :title => "MyString",
       :description => "MyText",
-      :category => nil
-    ))
+      :category_id => 1
+    )
   end
 
   it "renders attributes in <p>" do
