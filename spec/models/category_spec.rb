@@ -26,6 +26,13 @@ RSpec.describe Category, type: :model do
     end
   end
 
-
+  describe "Ancestry" do
+     it "should create the child" do
+      category=FactoryBot.create(:category)
+      child_category = FactoryBot.create(:child_category)
+      expect(child_category.parent.title).to eq("sometitle")
+      expect(category.children).to include child_category
+    end
+  end
 
 end
