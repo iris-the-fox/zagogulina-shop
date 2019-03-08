@@ -112,6 +112,13 @@ RSpec.describe CategoriesController, type: :controller do
         post :create, params: {category: valid_attributes}
         expect(response).to redirect_to(Category.last)
       end
+
+      it "creates a category with a custom slug" do
+        valid_attributes[:slug] = 'custom_slug'
+        post :create, params: {category: valid_attributes}
+        get :show, params: {id: 'custom_slug'}
+        expect(response).to be_successful
+      end
     end
 
     context "with invalid params" do
@@ -131,7 +138,8 @@ RSpec.describe CategoriesController, type: :controller do
   describe "PUT #update" do
     context "with valid params" do
       let(:new_attributes) {
-        { title: 'Somecat2', slug: 'another-slug'}
+        { title: 'Somecat2',
+          slug: 'another-slug'}
       }
 
       it "updates the requested category" do
@@ -144,6 +152,12 @@ RSpec.describe CategoriesController, type: :controller do
         put :update, params: {id: @category.to_param, category: new_attributes, slug: new_attributes{:slug}}
         @category.reload
         expect(response).to redirect_to(@category)
+      end
+
+      it "updates the slug" do
+        put :update, params: {id: @category.to_param, category: new_attributes}
+        get :show, params: {id: 'another-slug'}
+        expect(response).to be_successful
       end
     end
 

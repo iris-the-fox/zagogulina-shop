@@ -16,13 +16,16 @@ RSpec.describe Category, type: :model do
     it { is_expected.to have_many(:products) }
   end
 
+  describe "Slugging" do
+    it "creates a slug from title" do
+    	expect(FactoryBot.create(:category).slug).to eq("sometitle")
+    end
   
-  it "creates a slug from title" do
-  	expect(FactoryBot.create(:category).slug).to eq("sometitle")
+    it "takes the provided slug if it is given" do
+    	expect(FactoryBot.create(:category, slug: "another-slug").slug).to eq("another-slug")
+    end
   end
 
-  it "takes the provided slug if it is given" do
-  	expect(FactoryBot.create(:category, slug: "another-slug").slug).to eq("another-slug")
-  end
+
 
 end

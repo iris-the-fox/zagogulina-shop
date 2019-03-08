@@ -104,6 +104,13 @@ RSpec.describe ProductsController, type: :controller do
         post :create, params: {product: valid_attributes}
         expect(response).to redirect_to(Product.last)
       end
+
+      it "creates a product with a custom slug" do
+        valid_attributes[:slug] = 'custom_slug'
+        post :create, params: {product: valid_attributes}
+        get :show, params: {id: 'custom_slug'}
+        expect(response).to be_successful
+      end
     end
 
     context "with invalid params" do
@@ -123,7 +130,8 @@ RSpec.describe ProductsController, type: :controller do
     context "with valid params" do
       let(:new_attributes) {
         { title: 'Someprod2',
-          description: 'some description 2'}
+          description: 'some description 2',
+          slug: 'another-slug'}
       }
 
       it "updates the requested product" do
@@ -136,6 +144,12 @@ RSpec.describe ProductsController, type: :controller do
         @product.reload
         expect(response).to redirect_to(@product)
       end
+
+      it "updates the slug" do
+        put :update, params: {id: @product.to_param, product: new_attributes}
+        get :show, params: {id: 'another-slug'}
+        expect(response).to be_successful
+      end      
     end
 
     context "with invalid params" do

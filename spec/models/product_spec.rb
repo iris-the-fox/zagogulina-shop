@@ -20,15 +20,14 @@ RSpec.describe Product, type: :model do
     it { is_expected.to belong_to(:category) }
   end
 
-  it "creates a slug from title" do
-  	expect(FactoryBot.create(:product).slug).to eq("sometitle")
+  describe "Slugging" do
+    it "creates a slug from title" do
+    	expect(FactoryBot.create(:product).slug).to eq("sometitle")
+    end
+  
+    it "takes the provided slug if it is given" do
+    	expect(FactoryBot.create(:product, slug: "another-slug").slug).to eq("another-slug")
+    end
   end
-
-  it "takes the provided slug if it is given" do
-  	expect(FactoryBot.create(:product, slug: "another-slug").slug).to eq("another-slug")
-  end
-
-
-
   
 end
