@@ -1,5 +1,5 @@
 require 'rails_helper'
-require 'devise'
+
 
 RSpec.describe "categories/show", type: :view do
   before(:each) do 
