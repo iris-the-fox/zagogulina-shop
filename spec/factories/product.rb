@@ -1,7 +1,7 @@
 FactoryBot.define do
 
   factory :product, class: Product do
-    title {"sometitle"}
+    title {"someprod"}
     category_id {1}
   end
 

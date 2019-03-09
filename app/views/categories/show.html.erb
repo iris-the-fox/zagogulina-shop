@@ -1,5 +1,6 @@
 <h2> <%= @category.title %> </h2>
-<% if @products.exists? %>
+<% if !@products.nil? %>
+
 <table class="table table-bordered">
   <thead class="thead-dark">
     <tr>

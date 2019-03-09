@@ -22,7 +22,7 @@ RSpec.describe Product, type: :model do
 
   describe "Slugging" do
     it "creates a slug from title" do
-    	expect(FactoryBot.create(:product).slug).to eq("sometitle")
+    	expect(FactoryBot.create(:product).slug).to eq("someprod")
     end
   
     it "takes the provided slug if it is given" do

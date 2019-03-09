@@ -5,6 +5,7 @@ class CategoriesController < ApplicationController
   before_action :set_category, only: [:show, :edit, :update, :destroy]
   before_action :set_categories_new, only: [:new, :create]
   before_action :set_categories_edit, only: [:edit, :update]
+  before_action :set_products, only: [:show]
      
   include SortableTreeController::Sort
   sortable_tree 'Category', {parent_method: 'parent', sorting_attribute: 'pos'}
@@ -23,7 +24,6 @@ class CategoriesController < ApplicationController
   # GET /categories/1
   # GET /categories/1.json
   def show
-     @products = Product.where(category_id: [@category.subtree_ids])
   end
 
   # GET /categories/new
@@ -83,6 +83,10 @@ class CategoriesController < ApplicationController
     def set_categories_edit
       set_category
       @categories = Category.where("id != #{@category.id}").order(:title)
+    end
+    
+    def set_products
+      Product.where(category_id: [@category.subtree_ids]).exists? ? @products = Product.where(category_id: [@category.subtree_ids]) : nil
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
